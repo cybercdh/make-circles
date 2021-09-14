@@ -4,6 +4,7 @@ import simplekml
 import os.path
 import sys
 import pandas as pd
+import numpy as np
 from argparse import ArgumentParser
 from math import asin,cos,pi,sin
 
@@ -58,8 +59,23 @@ def ProcessPoint(lat, lon, radius, outfile):
 	# generate linestring for the circle
 	ls = kml.newlinestring(description=str(radius) + " radius")
 	ls.coords=circle_coords
-	ls.style.linestyle.color = simplekml.Color.red 
-	ls.style.linestyle.width = 5 # px
+
+	# color-code depending on radius
+	if radius in range(LOW_RADIUS, int(MAX_RADIUS * 0.10)):
+		ls.style.linestyle.color = simplekml.Color.red	
+		ls.style.linestyle.width = 5 # px
+	elif radius in range(int(MAX_RADIUS * 0.10),int(MAX_RADIUS * 0.20)):
+		ls.style.linestyle.color = simplekml.Color.blue
+		ls.style.linestyle.width = 4 # px
+	elif radius in range(int(MAX_RADIUS * 0.20),int(MAX_RADIUS * 0.30)):
+		ls.style.linestyle.color = simplekml.Color.yellow
+		ls.style.linestyle.width = 3 # px
+	elif radius in range(int(MAX_RADIUS * 0.30),int(MAX_RADIUS * 0.50)):
+		ls.style.linestyle.color = simplekml.Color.green
+		ls.style.linestyle.width = 2 # px
+	else:
+		ls.style.linestyle.color = simplekml.Color.orange
+		ls.style.linestyle.width = 1 # px
 
 	kml.save(outfile)
 
@@ -69,6 +85,9 @@ def is_valid_file(parser, arg):
     else:
         return open(arg, 'r')  # return an open file handle
 
+def Average(lst):
+    return sum(lst) / len(lst)
+  
 def main(argv):
 
 	parser = ArgumentParser(description="plot radius circles around points on a map")
@@ -77,11 +96,18 @@ def main(argv):
 	args = parser.parse_args()
 
 	df = pd.read_csv(args.inputfile)
+	
+	r_range = df['accuracy_radius'].tolist()
+	radius_range = [x for x in r_range if str(x) != 'nan'] # strip out any nan values from the list
+
+	global MAX_RADIUS
+	global LOW_RADIUS
+	LOW_RADIUS = int(min(radius_range))
+	MAX_RADIUS = int(max(radius_range))
 
 	for index, row in df.iterrows():
 		ProcessPoint(row['latitude'], row['longitude'], row['accuracy_radius'], args.outputfile)
 
 if __name__ == "__main__":
 	main(sys.argv[1:])
-
 
