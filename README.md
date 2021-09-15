@@ -13,10 +13,10 @@ $ python3 make_circles.py -i input.csv -o output.kml
 ```
 
 ## Output
-By loading the kml output into Google Earth will produce something akin to the following
+Loading the kml output into Google Earth will produce something akin to the following where light/thin circles denote wide radii, whilst thick/red circles are more accurate. A point will also be plotted in the centre of each radius.
+
 ![circles](https://github.com/cybercdh/make-circles/blob/media/circles.png?raw=true)
 
-Light and thin circles denote wide radii, whilst thick, red circles are more accurate.
 
 ## Contributing
 Pull requests are welcome. 
