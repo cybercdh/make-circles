@@ -12,6 +12,12 @@ The .csv input should have at least the following columns:
 $ python3 make_circles.py -i input.csv -o output.kml
 ```
 
+## Output
+By loading the kml output into Google Earth will produce something akin to the following
+![circles](https://github.com/cybercdh/make-circles/blob/media/circles.png?raw=true)
+
+Light and thin circles denote wide radii, whilst thick, red circles are more accurate.
+
 ## Contributing
 Pull requests are welcome. 
 
